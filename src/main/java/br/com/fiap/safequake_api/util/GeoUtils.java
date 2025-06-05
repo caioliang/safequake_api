@@ -13,8 +13,17 @@ public class GeoUtils {
         return EARTH_RADIUS_KM * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
+    public static double efeitoDepth(double depth) {
+        final double MAX_DEPTH = 700.0;
+        if (depth > MAX_DEPTH) return 1.0;
+        if (depth < 0) return 0.0;
+        return 1.0 - (depth / MAX_DEPTH); 
+    }
+
+
     public static double calcularIntensidade(double magnitude, double depth) {
-        return magnitude * 0.7 - depth * 0.3;
+        double depthEffect = efeitoDepth(depth);
+        return magnitude * 0.8 - depthEffect * 0.2;
     }
 
     public static String definirNivel(double score) {
