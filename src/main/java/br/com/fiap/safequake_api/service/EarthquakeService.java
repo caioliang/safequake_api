@@ -1,5 +1,6 @@
 package br.com.fiap.safequake_api.service;
 
+import br.com.fiap.safequake_api.dto.EarthquakeEventFullResponseDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventRequestDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventResponseDTO;
 import br.com.fiap.safequake_api.model.EarthquakeEvent;
@@ -43,6 +44,33 @@ public class EarthquakeService {
         }
 
         return toResponseDto(saved);
+    }
+
+    public List<EarthquakeEventResponseDTO> findAll() {
+        return earthquakeRepository.findAll().stream()
+            .map(this::toResponseDto)
+            .collect(Collectors.toList());
+    }
+
+    public List<EarthquakeEventFullResponseDTO> findAllWithClassification() {
+    return earthquakeRepository.findAll().stream()
+            .map(eq -> {
+                double intensidade = GeoUtils.calcularIntensidade(eq.getMagnitude(), eq.getDepth());
+                String nivel = GeoUtils.definirNivel(intensidade);
+                return EarthquakeEventFullResponseDTO.builder()
+                        .id(eq.getId())
+                        .latitude(eq.getLatitude())
+                        .longitude(eq.getLongitude())
+                        .magnitude(eq.getMagnitude())
+                        .depth(eq.getDepth())
+                        .timestamp(eq.getTimestamp())
+                        .externalId(eq.getExternalId())
+                        .place(eq.getPlace())
+                        .intensidade(intensidade)
+                        .nivel(nivel)
+                        .build();
+            })
+            .collect(Collectors.toList());
     }
 
     private List<User> encontrarUsuariosProximos(double lat, double lon) {

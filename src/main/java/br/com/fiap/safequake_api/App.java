@@ -22,12 +22,12 @@ import io.swagger.v3.oas.annotations.info.Info;
 		@Contact(
 			name = "SafeQuake", 
 			email = "contato@safequake.com.br")))
-
-		
+			
+			
 public class App {
 
 	public static void main(String[] args) {
 		SpringApplication.run(App.class, args);
-	}
+}
 
 }

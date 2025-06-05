@@ -14,12 +14,12 @@ public class GeoUtils {
     }
 
     public static double calcularIntensidade(double magnitude, double depth) {
-        return magnitude * 0.5 + depth * 0.2;
+        return magnitude * 0.7 - depth * 0.3;
     }
 
     public static String definirNivel(double score) {
-        if (score > 5.0) return "CRÍTICO";
-        else if (score > 2.5) return "ALTO";
+        if (score > 6.0) return "CRÍTICO";
+        else if (score > 4.0) return "ALTO";
         return "MODERADO";
     }
 }
