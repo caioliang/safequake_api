@@ -12,11 +12,9 @@ public class EarthquakeEventFullResponseDTO {
     private Double latitude;
     private Double longitude;
     private Double magnitude;
-    private Double depth;
     private LocalDateTime timestamp;
     private String externalId;
     private String place;
 
-    private Double intensidade;
     private String nivel;
 }

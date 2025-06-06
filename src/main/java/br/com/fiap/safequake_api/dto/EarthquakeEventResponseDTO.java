@@ -16,6 +16,5 @@ public class EarthquakeEventResponseDTO {
     private Double latitude;
     private Double longitude;
     private Double magnitude;
-    private Double depth;
     private LocalDateTime timestamp;
 }

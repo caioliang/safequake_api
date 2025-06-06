@@ -33,10 +33,6 @@ public class EarthquakeEvent {
     @DecimalMax(value = "10.0", message = "Magnitude máxima é 10")
     private Double magnitude;
 
-    @NotNull(message = "Profundidade é obrigatória")
-    @DecimalMin(value = "0.0", message = "Profundidade mínima é 0")
-    private Double depth;
-
     @NotNull(message = "Timestamp é obrigatório")
     private LocalDateTime timestamp;
 

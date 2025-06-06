@@ -33,15 +33,13 @@ public class EarthquakeService {
         event.setExternalId("manual_" + UUID.randomUUID());
         EarthquakeEvent saved = earthquakeRepository.save(event);
 
-        double score = GeoUtils.calcularIntensidade(event.getMagnitude(), event.getDepth());
-
-        if (score > ALERT_THRESHOLD) {
-            List<User> proximos = encontrarUsuariosProximos(event.getLatitude(), event.getLongitude());
-            for (User user : proximos) {
-                String nivel = GeoUtils.definirNivel(score);
-                alertService.emitirAlerta(user, saved, nivel);
-            }
-        }
+        // if (event.getMagnitude() > ALERT_THRESHOLD) {
+            // List<User> proximos = encontrarUsuariosProximos(event.getLatitude(), event.getLongitude());
+            // for (User user : proximos) {
+            //     String nivel = GeoUtils.definirNivel(event.getMagnitude());
+            //     alertService.emitirAlerta(user, saved, nivel);
+            // }
+        // }
 
         return toResponseDto(saved);
     }
@@ -55,18 +53,15 @@ public class EarthquakeService {
     public List<EarthquakeEventFullResponseDTO> findAllWithClassification() {
     return earthquakeRepository.findAll().stream()
             .map(eq -> {
-                double intensidade = GeoUtils.calcularIntensidade(eq.getMagnitude(), eq.getDepth());
-                String nivel = GeoUtils.definirNivel(intensidade);
+            String nivel = GeoUtils.definirNivel(eq.getMagnitude());
                 return EarthquakeEventFullResponseDTO.builder()
                         .id(eq.getId())
                         .latitude(eq.getLatitude())
                         .longitude(eq.getLongitude())
                         .magnitude(eq.getMagnitude())
-                        .depth(eq.getDepth())
                         .timestamp(eq.getTimestamp())
                         .externalId(eq.getExternalId())
                         .place(eq.getPlace())
-                        .intensidade(intensidade)
                         .nivel(nivel)
                         .build();
             })
@@ -83,7 +78,6 @@ public class EarthquakeService {
         return EarthquakeEvent.builder()
                 .latitude(dto.getLatitude())
                 .longitude(dto.getLongitude())
-                .depth(dto.getDepth())
                 .magnitude(dto.getMagnitude())
                 .timestamp(dto.getTimestamp())
                 .place(dto.getPlace())
@@ -98,7 +92,6 @@ public class EarthquakeService {
                 .latitude(eq.getLatitude())
                 .longitude(eq.getLongitude())
                 .magnitude(eq.getMagnitude())
-                .depth(eq.getDepth())
                 .timestamp(eq.getTimestamp())
                 .build();
     }

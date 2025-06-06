@@ -18,14 +18,6 @@ public class EarthquakeEventController {
 
     private final EarthquakeService earthquakeService;
 
-    @PostMapping("/manual")
-    public ResponseEntity<EarthquakeEventResponseDTO> cadastrarManual(
-            @RequestBody @Valid EarthquakeEventRequestDTO dto) {
-        
-        EarthquakeEventResponseDTO response = earthquakeService.createManual(dto);
-        return ResponseEntity.ok(response);
-    }
-
     @GetMapping
     public ResponseEntity<List<EarthquakeEventResponseDTO>> listarTodos() {
         List<EarthquakeEventResponseDTO> lista = earthquakeService.findAll();
@@ -37,4 +29,13 @@ public class EarthquakeEventController {
         List<EarthquakeEventFullResponseDTO> lista = earthquakeService.findAllWithClassification();
         return ResponseEntity.ok(lista);
     }
+    
+    @PostMapping("/manual")
+    public ResponseEntity<EarthquakeEventResponseDTO> cadastrarManual(
+            @RequestBody @Valid EarthquakeEventRequestDTO dto) {
+                
+                EarthquakeEventResponseDTO response = earthquakeService.createManual(dto);
+                return ResponseEntity.ok(response);
+    }
+
 }
