@@ -1,5 +1,8 @@
 package br.com.fiap.safequake_api.dto;
 
+import org.springframework.web.bind.annotation.PostMapping;
+
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
