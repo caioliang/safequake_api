@@ -15,6 +15,5 @@ public class EarthquakeEventFullResponseDTO {
     private LocalDateTime timestamp;
     private String externalId;
     private String place;
-
     private String nivel;
 }

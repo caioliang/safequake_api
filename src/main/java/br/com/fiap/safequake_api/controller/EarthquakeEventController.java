@@ -1,5 +1,6 @@
 package br.com.fiap.safequake_api.controller;
 
+import br.com.fiap.safequake_api.dto.AlertRequestDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventFullResponseDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventRequestDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventResponseDTO;
@@ -38,4 +39,9 @@ public class EarthquakeEventController {
                 return ResponseEntity.ok(response);
     }
 
+    @PostMapping("/alert")
+    public ResponseEntity<List<EarthquakeEventFullResponseDTO>> alert(@RequestBody @Valid AlertRequestDTO dto) {
+        List<EarthquakeEventFullResponseDTO> alertas = earthquakeService.buscarAlertasProximos(dto.getLatitude(), dto.getLongitude());
+        return ResponseEntity.ok(alertas);
+    }
 }

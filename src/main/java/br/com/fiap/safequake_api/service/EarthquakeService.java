@@ -21,11 +21,6 @@ import java.util.stream.Collectors;
 public class EarthquakeService {
 
     private final EarthquakeEventRepository earthquakeRepository;
-    private final UserRepository userRepository;
-    private final AlertService alertService;
-
-    private static final double ALERT_RADIUS_KM = 100.0;
-    private static final double ALERT_THRESHOLD = 2.5;
 
     @Transactional
     public EarthquakeEventResponseDTO createManual(EarthquakeEventRequestDTO dto) {
@@ -33,15 +28,27 @@ public class EarthquakeService {
         event.setExternalId("manual_" + UUID.randomUUID());
         EarthquakeEvent saved = earthquakeRepository.save(event);
 
-        // if (event.getMagnitude() > ALERT_THRESHOLD) {
-            // List<User> proximos = encontrarUsuariosProximos(event.getLatitude(), event.getLongitude());
-            // for (User user : proximos) {
-            //     String nivel = GeoUtils.definirNivel(event.getMagnitude());
-            //     alertService.emitirAlerta(user, saved, nivel);
-            // }
-        // }
-
         return toResponseDto(saved);
+    }
+
+    public List<EarthquakeEventFullResponseDTO> buscarAlertasProximos(double latitude, double longitude) {
+        return earthquakeRepository.findAll().stream()
+                .filter(eq -> {
+                    String nivel = GeoUtils.definirNivel(eq.getMagnitude());
+                    double distancia = GeoUtils.calcularDistanciaKm(latitude, longitude, eq.getLatitude(), eq.getLongitude());
+                    return distancia <= 70 && (nivel.equals("ALTO") || nivel.equals("CRÍTICO"));
+                })
+                .map(eq -> EarthquakeEventFullResponseDTO.builder()
+                        .id(eq.getId())
+                        .latitude(eq.getLatitude())
+                        .longitude(eq.getLongitude())
+                        .magnitude(eq.getMagnitude())
+                        .timestamp(eq.getTimestamp())
+                        .externalId(eq.getExternalId())
+                        .place(eq.getPlace())
+                        .nivel(GeoUtils.definirNivel(eq.getMagnitude()))
+                        .build())
+                .collect(Collectors.toList());
     }
 
     public List<EarthquakeEventResponseDTO> findAll() {
@@ -68,11 +75,6 @@ public class EarthquakeService {
             .collect(Collectors.toList());
     }
 
-    private List<User> encontrarUsuariosProximos(double lat, double lon) {
-        return userRepository.findAll().stream()
-                .filter(user -> GeoUtils.calcularDistanciaKm(lat, lon, user.getLatitude(), user.getLongitude()) <= ALERT_RADIUS_KM)
-                .collect(Collectors.toList());
-    }
 
     private EarthquakeEvent fromRequestDto(EarthquakeEventRequestDTO dto) {
         return EarthquakeEvent.builder()
