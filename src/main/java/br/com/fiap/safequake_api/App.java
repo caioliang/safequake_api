@@ -23,7 +23,6 @@ import io.swagger.v3.oas.annotations.info.Info;
 			name = "SafeQuake", 
 			email = "contato@safequake.com.br")))
 			
-			
 public class App {
 
 	public static void main(String[] args) {

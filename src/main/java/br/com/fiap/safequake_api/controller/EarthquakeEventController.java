@@ -5,6 +5,7 @@ import br.com.fiap.safequake_api.dto.EarthquakeEventFullResponseDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventRequestDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventResponseDTO;
 import br.com.fiap.safequake_api.service.EarthquakeService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/earthquakes")
+@Tag(name = "Terremotos", description = "Endpoints relacionados a terremotos")
 @RequiredArgsConstructor
 public class EarthquakeEventController {
 

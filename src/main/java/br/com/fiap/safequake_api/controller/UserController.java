@@ -5,6 +5,7 @@ import br.com.fiap.safequake_api.dto.UserResponseDTO;
 import br.com.fiap.safequake_api.model.User;
 import br.com.fiap.safequake_api.repository.UserRepository;
 import br.com.fiap.safequake_api.service.UserService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@Tag(name = "Usuários", description = "Endpoints relacionado a usuários")
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {

@@ -8,6 +8,7 @@ import br.com.fiap.safequake_api.model.User;
 import br.com.fiap.safequake_api.repository.EarthquakeEventRepository;
 import br.com.fiap.safequake_api.repository.UserRepository;
 import br.com.fiap.safequake_api.util.GeoUtils;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ public class EarthquakeService {
 
     private final EarthquakeEventRepository earthquakeRepository;
 
+    @Operation(summary = "Cadastro de abalos sísmicos")
     @Transactional
     public EarthquakeEventResponseDTO createManual(EarthquakeEventRequestDTO dto) {
         EarthquakeEvent event = fromRequestDto(dto);

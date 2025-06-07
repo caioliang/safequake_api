@@ -10,7 +10,9 @@ import br.com.fiap.safequake_api.model.Token;
 import br.com.fiap.safequake_api.model.User;
 import br.com.fiap.safequake_api.service.AuthService;
 import br.com.fiap.safequake_api.service.TokenService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 
+@Tag(name = "Autenticação", description = "Endpoints relacionado a autenticação de usuários")
 @RestController
 public class AuthController {
 
