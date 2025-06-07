@@ -34,6 +34,29 @@ public class EarthquakeService {
         return toResponseDto(saved);
     }
 
+    @Transactional
+    public EarthquakeEventResponseDTO atualizar(Long id, EarthquakeEventRequestDTO dto) {
+        EarthquakeEvent existente = earthquakeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Terremoto não encontrado"));
+
+        existente.setLatitude(dto.getLatitude());
+        existente.setLongitude(dto.getLongitude());
+        existente.setMagnitude(dto.getMagnitude());
+        existente.setTimestamp(dto.getTimestamp());
+        existente.setPlace(dto.getPlace());
+
+        EarthquakeEvent atualizado = earthquakeRepository.save(existente);
+        return toResponseDto(atualizado);
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        EarthquakeEvent existente = earthquakeRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Terremoto não encontrado"));
+
+        earthquakeRepository.delete(existente);
+    }
+
     public List<EarthquakeEventFullResponseDTO> buscarAlertasProximos(double latitude, double longitude) {
         return earthquakeRepository.findAll().stream()
                 .filter(eq -> {
