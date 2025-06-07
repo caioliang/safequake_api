@@ -4,14 +4,15 @@ import br.com.fiap.safequake_api.dto.EarthquakeEventFullResponseDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventRequestDTO;
 import br.com.fiap.safequake_api.dto.EarthquakeEventResponseDTO;
 import br.com.fiap.safequake_api.model.EarthquakeEvent;
-import br.com.fiap.safequake_api.model.User;
 import br.com.fiap.safequake_api.repository.EarthquakeEventRepository;
-import br.com.fiap.safequake_api.repository.UserRepository;
 import br.com.fiap.safequake_api.util.GeoUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.UUID;
@@ -59,24 +60,41 @@ public class EarthquakeService {
             .collect(Collectors.toList());
     }
 
-    public List<EarthquakeEventFullResponseDTO> findAllWithClassification() {
-    return earthquakeRepository.findAll().stream()
-            .map(eq -> {
-            String nivel = GeoUtils.definirNivel(eq.getMagnitude());
-                return EarthquakeEventFullResponseDTO.builder()
-                        .id(eq.getId())
-                        .latitude(eq.getLatitude())
-                        .longitude(eq.getLongitude())
-                        .magnitude(eq.getMagnitude())
-                        .timestamp(eq.getTimestamp())
-                        .externalId(eq.getExternalId())
-                        .place(eq.getPlace())
-                        .nivel(nivel)
-                        .build();
-            })
-            .collect(Collectors.toList());
-    }
+    public Page<EarthquakeEventFullResponseDTO> findAllWithClassification(Pageable pageable, String nivelFiltro) {
+        List<EarthquakeEvent> todos = earthquakeRepository.findAll();
 
+        List<EarthquakeEventFullResponseDTO> classificados = todos.stream()
+                .map(eq -> {
+                    String nivel = GeoUtils.definirNivel(eq.getMagnitude());
+                    return EarthquakeEventFullResponseDTO.builder()
+                            .id(eq.getId())
+                            .latitude(eq.getLatitude())
+                            .longitude(eq.getLongitude())
+                            .magnitude(eq.getMagnitude())
+                            .timestamp(eq.getTimestamp())
+                            .externalId(eq.getExternalId())
+                            .place(eq.getPlace())
+                            .nivel(nivel)
+                            .build();
+                })
+                .filter(dto -> nivelFiltro == null || dto.getNivel().equalsIgnoreCase(nivelFiltro))
+                .sorted((a, b) -> {
+                    if (!pageable.getSort().isEmpty()) {
+                        return pageable.getSort().stream().findFirst().get().getProperty().equals("timestamp")
+                                ? b.getTimestamp().compareTo(a.getTimestamp())
+                                : 0;
+                    }
+                    return 0;
+                })
+                .toList();
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min(start + pageable.getPageSize(), classificados.size());
+
+        List<EarthquakeEventFullResponseDTO> pageContent = classificados.subList(start, end);
+
+        return new PageImpl<>(pageContent, pageable, classificados.size());
+    }
 
     private EarthquakeEvent fromRequestDto(EarthquakeEventRequestDTO dto) {
         return EarthquakeEvent.builder()

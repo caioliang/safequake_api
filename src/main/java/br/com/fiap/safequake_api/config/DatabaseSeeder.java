@@ -58,7 +58,7 @@ public class DatabaseSeeder {
         repository.save(EarthquakeEvent.builder()
                 .latitude(19.4326)
                 .longitude(-99.1332)
-                .magnitude(6.8)
+                .magnitude(2.4)
                 .timestamp(LocalDateTime.now().minusHours(6))
                 .externalId(UUID.randomUUID().toString())
                 .place("Cidade do México")

@@ -1,17 +1,13 @@
 package br.com.fiap.safequake_api.controller;
 
 import br.com.fiap.safequake_api.dto.UserRequestDTO;
-import br.com.fiap.safequake_api.dto.UserResponseDTO;
 import br.com.fiap.safequake_api.model.User;
 import br.com.fiap.safequake_api.repository.UserRepository;
-import br.com.fiap.safequake_api.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +16,6 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 public class UserController {
-
-    private final UserService userService;
 
     @Autowired
     private UserRepository repository;

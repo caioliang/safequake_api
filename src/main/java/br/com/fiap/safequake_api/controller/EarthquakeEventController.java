@@ -8,6 +8,10 @@ import br.com.fiap.safequake_api.service.EarthquakeService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,10 +32,12 @@ public class EarthquakeEventController {
     }
     
     @GetMapping("/classified")
-    public ResponseEntity<List<EarthquakeEventFullResponseDTO>> listarClassificados() {
-        List<EarthquakeEventFullResponseDTO> lista = earthquakeService.findAllWithClassification();
-        return ResponseEntity.ok(lista);
+    public ResponseEntity<Page<EarthquakeEventFullResponseDTO>> listarClassificados(
+            @RequestParam(required = false) String nivel,
+            @ParameterObject Pageable pageable) {
+        return ResponseEntity.ok(earthquakeService.findAllWithClassification(pageable, nivel));
     }
+
     
     @PostMapping("/manual")
     public ResponseEntity<EarthquakeEventResponseDTO> cadastrarManual(
