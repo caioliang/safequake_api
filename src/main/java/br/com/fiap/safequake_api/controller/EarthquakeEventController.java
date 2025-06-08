@@ -16,6 +16,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 
 @RestController
 @RequestMapping("/earthquakes")
@@ -38,8 +41,22 @@ public class EarthquakeEventController {
         return ResponseEntity.ok(earthquakeService.findAllWithClassification(pageable, nivel));
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<EarthquakeEventResponseDTO> atualizar(
+            @PathVariable Long id,
+            @RequestBody @Valid EarthquakeEventRequestDTO dto) {
+        
+        EarthquakeEventResponseDTO atualizado = earthquakeService.atualizar(id, dto);
+        return ResponseEntity.ok(atualizado);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletar(@PathVariable Long id) {
+        earthquakeService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
     
-    @PostMapping("/manual")
+    @PostMapping("/manual") 
     public ResponseEntity<EarthquakeEventResponseDTO> cadastrarManual(
             @RequestBody @Valid EarthquakeEventRequestDTO dto) {
                 
